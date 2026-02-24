@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jobster Proces Flow</title>
+    <style>
+        :root {
+            --jobster-blue: #0061ff;
+            --jobster-dark: #1a1a1a;
+            --line-color: #e0e0e0;
+            --bg-body: transparent; /* Zorgt dat het mooi blend in Notion */
+        }
+
+        body { 
+            background-color: var(--bg-body); 
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center; /* Horizontale centrering */
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        .process-wrapper {
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            width: 100%;
+            max-width: 400px; /* Houdt het proces compact en strak */
+        }
+
+        /* De verticale verbindingslijn */
+        .process-wrapper::before {
+            content: '';
+            position: absolute;
+            left: 25px; /* Precies in het midden van de 50px iconen */
+            top: 20px;
+            bottom: 20px;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--jobster-blue) 0%, var(--line-color) 100%);
+            z-index: 1;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            cursor: pointer;
+            position: relative;
+            z-index: 2;
+            transition: all 0.3s ease;
+            text-decoration: none; /* Voor als je er later links van maakt */
+        }
+
+        /* De Icoon Container */
+        .icon-box {
+            width: 50px;
+            height: 50px;
+            background-color: white;
+            border: 2px solid var(--jobster-blue);
+            border-radius: 14px; /* Jobster-stijl afgeronde hoeken */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 22px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            flex-shrink: 0;
+        }
+
+        /* De Tekst Kaart */
+        .content-card {
+            margin-left: 20px;
+            background: white;
+            padding: 14px 22px;
+            border-radius: 12px;
+            border: 1px solid #eee;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+            flex-grow: 1;
+            transition: all 0.3s ease;
+        }
+
+        .content-card h3 {
+            margin: 0;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--jobster-dark);
+        }
+
+        /* HOVER EFFECTEN */
+        .step:hover .icon-box {
+            background-color: var(--jobster-blue);
+            color: white;
+            transform: scale(1.15) rotate(-5deg);
+            box-shadow: 0 8px 15px rgba(0, 97, 255, 0.3);
+        }
+
+        .step:hover .content-card {
+            transform: translateX(12px);
+            border-color: var(--jobster-blue);
+            box-shadow: 0 5px 15px rgba(0, 97, 255, 0.1);
+        }
+
+        .step:hover h3 {
+            color: var(--jobster-blue);
+        }
+
+        /* Laatste stap heeft geen extra ruimte nodig onderaan */
+        .step:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Voor een soepele verschijning in Notion */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .process-wrapper {
+            animation: fadeIn 0.8s ease-out;
+        }
+    </style>
+</head>
+<body>
+
+<div class="process-wrapper">
+    
+    <div class="step">
+        <div class="icon-box">👤</div>
+        <div class="content-card"><h3>Create Recruiter</h3></div>
+    </div>
+
+    <div class="step">
+        <div class="icon-box">🏢</div>
+        <div class="content-card"><h3>Create Account</h3></div>
+    </div>
+
+    <div class="step">
+        <div class="icon-box">📡</div>
+        <div class="content-card"><h3>Send Pixel</h3></div>
+    </div>
+
+    <div class="step">
+        <div class="icon-box">🛠️</div>
+        <div class="content-card"><h3>Implement Pixel</h3></div>
+    </div>
+
+    <div class="step">
+        <div class="icon-box">🧪</div>
+        <div class="content-card"><h3>Test Pixel</h3></div>
+    </div>
+
+    <div class="step">
+        <div class="icon-box">📥</div>
+        <div class="content-card"><h3>Import Vacancies</h3></div>
+    </div>
+
+    <div class="step">
+        <div class="icon-box">🚀</div>
+        <div class="content-card"><h3>Create Campaign</h3></div>
+    </div>
+
+    <div class="step">
+        <div class="icon-box">🟢</div>
+        <div class="content-card"><h3>Campaigns Live</h3></div>
+    </div>
+
+    <div class="step">
+        <div class="icon-box">🔑</div>
+        <div class="content-card"><h3>Login Sent to Client</h3></div>
+    </div>
+
+</div>
+
+</body>
+</html>
