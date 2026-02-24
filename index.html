@@ -3,172 +3,189 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jobster Proces Flow</title>
+    <title>Complex Decision Flow</title>
     <style>
         :root {
             --jobster-blue: #0061ff;
+            --success-green: #00d1b2;
+            --error-red: #ff4757;
             --jobster-dark: #1a1a1a;
             --line-color: #e0e0e0;
-            --bg-body: transparent; /* Zorgt dat het mooi blend in Notion */
         }
 
         body { 
-            background-color: var(--bg-body); 
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            background: transparent; 
+            font-family: 'Inter', sans-serif; 
             margin: 0;
-            padding: 40px 20px;
-            display: flex;
-            justify-content: center; /* Horizontale centrering */
-            align-items: flex-start;
-            min-height: 100vh;
-        }
-
-        .process-wrapper {
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            width: 100%;
-            max-width: 400px; /* Houdt het proces compact en strak */
-        }
-
-        /* De verticale verbindingslijn */
-        .process-wrapper::before {
-            content: '';
-            position: absolute;
-            left: 25px; /* Precies in het midden van de 50px iconen */
-            top: 20px;
-            bottom: 20px;
-            width: 2px;
-            background: linear-gradient(to bottom, var(--jobster-blue) 0%, var(--line-color) 100%);
-            z-index: 1;
-        }
-
-        .step {
-            display: flex;
-            align-items: center;
-            margin-bottom: 30px;
-            cursor: pointer;
-            position: relative;
-            z-index: 2;
-            transition: all 0.3s ease;
-            text-decoration: none; /* Voor als je er later links van maakt */
-        }
-
-        /* De Icoon Container */
-        .icon-box {
-            width: 50px;
-            height: 50px;
-            background-color: white;
-            border: 2px solid var(--jobster-blue);
-            border-radius: 14px; /* Jobster-stijl afgeronde hoeken */
+            padding: 50px 20px;
             display: flex;
             justify-content: center;
+        }
+
+        .flow-container {
+            display: flex;
+            flex-direction: column;
             align-items: center;
-            font-size: 22px;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            flex-shrink: 0;
+            gap: 40px;
+            position: relative;
+            max-width: 600px;
         }
 
-        /* De Tekst Kaart */
-        .content-card {
-            margin-left: 20px;
+        /* De verbindingslijnen */
+        .line {
+            width: 2px;
+            background: var(--line-color);
+            height: 40px;
+            position: relative;
+        }
+
+        /* De "Node" of stap */
+        .node {
+            position: relative;
             background: white;
-            padding: 14px 22px;
+            border: 2px solid var(--jobster-blue);
+            padding: 15px 25px;
             border-radius: 12px;
-            border: 1px solid #eee;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.03);
-            flex-grow: 1;
-            transition: all 0.3s ease;
-        }
-
-        .content-card h3 {
-            margin: 0;
-            font-size: 15px;
             font-weight: 600;
             color: var(--jobster-dark);
+            cursor: help;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            text-align: center;
+            min-width: 200px;
         }
 
-        /* HOVER EFFECTEN */
-        .step:hover .icon-box {
-            background-color: var(--jobster-blue);
-            color: white;
-            transform: scale(1.15) rotate(-5deg);
-            box-shadow: 0 8px 15px rgba(0, 97, 255, 0.3);
+        /* Tooltip (de info die oppopt) */
+        .node .tooltip {
+            visibility: hidden;
+            width: 220px;
+            background-color: var(--jobster-dark);
+            color: #fff;
+            text-align: center;
+            border-radius: 8px;
+            padding: 10px;
+            position: absolute;
+            z-index: 10;
+            bottom: 125%; /* Boven de knop */
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 12px;
+            font-weight: normal;
+            line-height: 1.4;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
         }
 
-        .step:hover .content-card {
-            transform: translateX(12px);
-            border-color: var(--jobster-blue);
-            box-shadow: 0 5px 15px rgba(0, 97, 255, 0.1);
+        /* Driehoekje onder de tooltip */
+        .node .tooltip::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: var(--jobster-dark) transparent transparent transparent;
         }
 
-        .step:hover h3 {
-            color: var(--jobster-blue);
+        /* Hover effecten */
+        .node:hover {
+            transform: translateY(-5px);
+            border-color: var(--success-green);
+            box-shadow: 0 8px 15px rgba(0, 209, 178, 0.2);
         }
 
-        /* Laatste stap heeft geen extra ruimte nodig onderaan */
-        .step:last-child {
-            margin-bottom: 0;
+        .node:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
         }
 
-        /* Voor een soepele verschijning in Notion */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* Ja/Nee Vertakking Styling */
+        .decision-wrapper {
+            display: flex;
+            gap: 100px;
+            position: relative;
         }
-        .process-wrapper {
-            animation: fadeIn 0.8s ease-out;
+
+        .decision-wrapper::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            width: 100%;
+            height: 2px;
+            background: var(--line-color);
+            transform: translateX(-50%);
+            z-index: -1;
         }
+
+        .choice {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        .label-yes { color: var(--success-green); font-size: 12px; font-weight: bold; margin-bottom: 5px; }
+        .label-no { color: var(--error-red); font-size: 12px; font-weight: bold; margin-bottom: 5px; }
+
+        .result-node { border-style: dashed; border-color: #ccc; }
     </style>
 </head>
 <body>
 
-<div class="process-wrapper">
+<div class="flow-container">
     
-    <div class="step">
-        <div class="icon-box">👤</div>
-        <div class="content-card"><h3>Create Recruiter</h3></div>
+    <div class="node">
+        1. Pixel Implementatie
+        <span class="tooltip">Check of de klant de GTM-container correct heeft geplaatst. Hover voor details: Scripts moeten in de &lt;head&gt; staan.</span>
     </div>
 
-    <div class="step">
-        <div class="icon-box">🏢</div>
-        <div class="content-card"><h3>Create Account</h3></div>
+    <div class="line"></div>
+
+    <div class="node" style="background: #f0f5ff;">
+        2. Test Pixel Signaal?
+        <span class="tooltip">Gebruik de Pixel Helper tool. Krijg je een 'Page View' event binnen?</span>
     </div>
 
-    <div class="step">
-        <div class="icon-box">📡</div>
-        <div class="content-card"><h3>Send Pixel</h3></div>
+    <div class="decision-wrapper">
+        
+        <div class="choice">
+            <span class="label-yes">JA (Signaal OK)</span>
+            <div class="line"></div>
+            <div class="node">
+                3. Import Vacatures
+                <span class="tooltip">Signaal is goed! We kunnen nu de XML-feed koppelen en de vacatures ophalen.</span>
+            </div>
+            <div class="line"></div>
+            <div class="node" style="border-color: var(--success-green);">
+                4. Campagne LIVE 🚀
+                <span class="tooltip">Alles staat klaar. De advertenties worden nu getoond op Jobster.</span>
+            </div>
+        </div>
+
+        <div class="choice">
+            <span class="label-no">NEE (Geen Signaal)</span>
+            <div class="line"></div>
+            <div class="node" style="border-color: var(--error-red);">
+                3b. Debugging Mode
+                <span class="tooltip">Mogelijke oorzaak: Adblocker van de klant of verkeerde Consent Mode instellingen.</span>
+            </div>
+            <div class="line"></div>
+            <div class="node result-node">
+                4b. Support Ticket
+                <span class="tooltip">Stuur een mail naar tech-support met de URL van de klant.</span>
+            </div>
+        </div>
+
     </div>
 
-    <div class="step">
-        <div class="icon-box">🛠️</div>
-        <div class="content-card"><h3>Implement Pixel</h3></div>
-    </div>
+    <div class="line"></div>
 
-    <div class="step">
-        <div class="icon-box">🧪</div>
-        <div class="content-card"><h3>Test Pixel</h3></div>
-    </div>
-
-    <div class="step">
-        <div class="icon-box">📥</div>
-        <div class="content-card"><h3>Import Vacancies</h3></div>
-    </div>
-
-    <div class="step">
-        <div class="icon-box">🚀</div>
-        <div class="content-card"><h3>Create Campaign</h3></div>
-    </div>
-
-    <div class="step">
-        <div class="icon-box">🟢</div>
-        <div class="content-card"><h3>Campaigns Live</h3></div>
-    </div>
-
-    <div class="step">
-        <div class="icon-box">🔑</div>
-        <div class="content-card"><h3>Login Sent to Client</h3></div>
+    <div class="node">
+        5. Wekelijkse Rapportage
+        <span class="tooltip">Worden er conversies gemeten? Indien nee: herstart stap 2.</span>
     </div>
 
 </div>
